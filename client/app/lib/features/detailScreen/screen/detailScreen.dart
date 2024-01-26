@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:oyo/constant/constant.dart';
+import 'package:oyo/features/auth/service/auth_service.dart';
+import 'package:oyo/features/booking/service/bookingService.dart';
 import 'package:oyo/features/detailScreen/screen/checkScreen.dart';
+import 'package:oyo/features/detailScreen/service/bookingService.dart';
 import 'package:oyo/features/favourit/service/favService.dart';
-import 'package:oyo/features/home/models/venueModel.dart';
+import 'package:oyo/models/venueModel.dart';
 import 'package:oyo/features/home/screen/home_screen.dart';
 
 import 'package:oyo/features/detailScreen/provider/user.dart';
@@ -29,19 +32,24 @@ class _DetailScreenState extends State<DetailScreen> {
   bool isFavorite = false;
   bool readmore = false;
   int? maxLines = 2; 
-  final FavService favService = FavService();
+  final AuthService authService = AuthService();
   // You can change this variable to control maxLines
 
   late List<List<dynamic>> tableData;
+  late List<List<dynamic>> booking_detail;
+
 
   @override
   void initState() {
     super.initState();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     tableData = [
       ['People', '${widget.hall.capacity}', Icons.people],
       ['Rate per plate', '\$${widget.hall.pricePerPlate}', Icons.attach_money],
     ];
+    print(userProvider.selectedDate);
+   
   }
 
    Future<void> toggleFavoriteStatus( ) async {
@@ -49,7 +57,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
     try {
       if (isFavorite) {
-        final remStas = await favService.removeFromFavorites(
+        final remStas = await authService.removeFromFavorites(
             context: context,
             hallId: widget.hall.id,
             userId: Provider.of<UserProvider>(context, listen: false).user.id);
@@ -59,7 +67,7 @@ class _DetailScreenState extends State<DetailScreen> {
           });
         }
       } else {
-        final addstas = await favService.addToFavorites(
+        final addstas = await authService.addToFavorites(
             context: context,
             hallId: widget.hall.id,
             userId: Provider.of<UserProvider>(context, listen: false).user.id);
@@ -324,7 +332,75 @@ class _DetailScreenState extends State<DetailScreen> {
                           SizedBox(height: 50),
 
                           // =================================
-                          Row(
+                         
+                          Text("Your Booking Detail"),
+                           Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 1,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
+                            child: Consumer<UserProvider>(
+                                    builder: (context, myData, _ ) {
+                                       booking_detail = [
+                                          ['date', '${myData.selectedDateFormated}', Icons.date_range],
+                                          ['Bookin for', '${myData.user.name}', Icons.person_2_outlined],
+                                        ];
+                                return Table(
+                                  border: TableBorder.symmetric(
+                                    inside:
+                                        BorderSide(width: 2, color: Color.fromARGB(255, 238, 237, 237)),
+                                  ),
+                                  children: List.generate(
+                                    booking_detail.length,
+                                    (rowIndex) => TableRow(
+                                      children: [
+                                        TableCell(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child:
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+
+                                                      padding: const EdgeInsets.symmetric( horizontal: 10.0),
+                                                      child: Icon(booking_detail[rowIndex][2] ),
+                                                    ),
+                                                    Text(booking_detail[rowIndex][0]),
+ 
+                                                  ],
+                                                ),
+                                          ),
+                                        ),
+                                        TableCell(
+                                          
+                                          child: Padding(
+                                            
+                                            padding: const EdgeInsets.all(10.0),
+                                            child:
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    Text(booking_detail[rowIndex][1], style: TextStyle(color: Colors.blue),),
+ 
+                                                  ],
+                                                ),
+                                          ),
+                                        ),
+                                      ]
+                                    ),
+                                  ),
+                                );
+                              }
+                            ),
+                          ),
+                          SizedBox(height: 50),
+
+
+                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CustomButton(
@@ -334,15 +410,21 @@ class _DetailScreenState extends State<DetailScreen> {
                                         context, SltDateScreen.namedRoute,
                                         arguments: widget.hall.id);
                                   },
-                                  text: "Choose Date",
+                                  text: "Check Availability",
                                   icon: Icons.date_range_outlined),
                               CustomButton(
                                   type: ButtonType.Outline,
-                                  onPressed: () {},
-                                  text: "book",
+                                  onPressed: () {
+                                    BookingService().bookHall(context: context , hallId: widget.hall.id);
+
+
+                                  },
+                                  text: "Book Your Hall",
                                   icon: Icons.book)
                             ],
                           ),
+
+                         
                         ],
                       ),
                     ),

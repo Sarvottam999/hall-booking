@@ -3,9 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:oyo/constant/constant.dart';
 import 'package:oyo/features/detailScreen/service/detailService.dart';
-import 'package:oyo/features/home/models/venueModel.dart';
+import 'package:oyo/models/venueModel.dart';
 import 'package:oyo/features/detailScreen/provider/user.dart';
 import 'package:oyo/features/detailScreen/widget/custom_buttom.dart';
+import 'package:oyo/providers/user_provider.dart';
 import 'package:provider/provider.dart';
  // class HomeService  {
 
@@ -55,7 +56,7 @@ class SltDateScreen extends StatelessWidget {
                 children: [
                   SizedBox(height: 20),
              
-                   Consumer<UserJourDate>(
+                   Consumer<UserProvider>(
                   builder: (context, dateProvider, child) {
                     return Text(
                       dateProvider.isDateSelectedAval ? 'Available' : 'Not Available',
@@ -76,10 +77,10 @@ class SltDateScreen extends StatelessWidget {
                     'Selected Date',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Consumer<UserJourDate>(
+                  Consumer<UserProvider>(
                   builder: (context, dateProvider, child) {
                     return Text(
-                      DateFormat('dd MMM yyyy').format(dateProvider.selectedDate),
+                      dateProvider.selectedDateFormated,
 
                       // DateFormat('yyyy-MM-dd').format(dateProvider.selectedDate),
                       style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
@@ -103,7 +104,7 @@ class SltDateScreen extends StatelessWidget {
                 onPressed: ()  async  { 
                   // sendRequest(context);
                        await _selectDate(context);
-                      await detailService.checkAvailability(context: context,hallId: hallid, date: Provider.of<UserJourDate>(context, listen: false).selectedDate);
+                      await detailService.checkAvailability(context: context,hallId: hallid, date: Provider.of<UserProvider>(context, listen: false).selectedDate);
 
                  
                    },
@@ -152,8 +153,8 @@ class SltDateScreen extends StatelessWidget {
 
     );
 
-    if (picked != null && picked != Provider.of<UserJourDate>(context, listen: false).selectedDate) {
-      Provider.of<UserJourDate>(context, listen: false).setSelectedDate(picked);
+    if (picked != null && picked != Provider.of<UserProvider>(context, listen: false).selectedDate) {
+      Provider.of<UserProvider>(context, listen: false).setSelectedDate(picked);
     }
   }
 }

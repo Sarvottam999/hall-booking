@@ -105,13 +105,8 @@ class _BottomBarState extends State<BottomBar> {
                   ),
                 ),
               ),
-              child: Badge(
-                // elevation: 0,
-                label: Text(2.toString()),
-                // badgeColor: Colors.white,
-                child: const Icon(
-                  Icons.date_range_outlined,
-                ),
+              child: const Icon(
+                Icons.date_range_outlined,
               ),
             ),
             label: '',

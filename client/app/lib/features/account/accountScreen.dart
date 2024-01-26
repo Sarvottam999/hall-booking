@@ -3,7 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:oyo/comman/textField_border.dart';
 import 'package:oyo/constant/constant.dart';
-import 'package:oyo/features/auth/model/userModel.dart';
+import 'package:oyo/models/userModel.dart';
 import 'package:oyo/features/auth/service/auth_service.dart';
 import 'package:oyo/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +61,11 @@ user =  Provider.of<UserProvider>(context, listen: false).user;
               height: 30,
             
             ),
+            CustomTextField( 
+            controller: TextEditingController(text: "${user!.id}"),
+            hintText: "ID",
+            hasPrefixIcon: false,
+              hasSuffixIcon: false,),
           
             //name
             Text(

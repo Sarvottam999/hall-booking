@@ -8,7 +8,9 @@ class User {
   final String address;
   final String type;
   final String token;
-  // final List<dynamic> cart;
+    List<String> likes;
+
+  // final List<String> likes;
 
   User({
     required this.id,
@@ -18,6 +20,8 @@ class User {
     required this.address,
     required this.type,
     required this.token,
+        required this.likes,
+
     // required this.cart,
   });
 
@@ -30,6 +34,8 @@ class User {
       'address': address,
       'type': type,
       'token': token,
+              "favoriteHalls": List<dynamic>.from(likes.map((x) => x)),
+
       // 'cart': cart,
     };
   }
@@ -43,6 +49,8 @@ class User {
       address: map['address'] ?? '',
       type: map['type'] ?? '',
       token: map['token'] ?? '',
+        likes: List<String>.from(map["favoriteHalls"].map((x) => x)),
+
       // cart: List<Map<String, dynamic>>.from(
         // map['cart']?.map(
         //   (x) => Map<String, dynamic>.from(x),
@@ -53,29 +61,30 @@ class User {
 
      
 
-  String toJson() => json.encode(toMap());
+  // String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source) => User.fromMap(json.decode(source));
+  // factory User.fromJson(String source) => User.fromMap(json.decode(source));
 
-  User copyWith({
-    String? id,
-    String? name,
-    String? email,
-    String? password,
-    String? address,
-    String? type,
-    String? token,
-    List<dynamic>? cart,
-  }) {
-    return User(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      password: password ?? this.password,
-      address: address ?? this.address,
-      type: type ?? this.type,
-      token: token ?? this.token,
-      // cart: cart ?? this.cart,
-    );
-  }
+  // User copyWith({
+  //   String? id,
+  //   String? name,
+  //   String? email,
+  //   String? password,
+  //   String? address,
+  //   String? type,
+  //   String? token,
+  //   List<String>? likes,
+  // }) {
+  //   return User(
+  //     id: id ?? this.id,
+  //     name: name ?? this.name,
+  //     email: email ?? this.email,
+  //     password: password ?? this.password,
+  //     address: address ?? this.address,
+  //     type: type ?? this.type,
+  //     token: token ?? this.token,
+  //     likes:  likes ?? this.likes
+  //     // cart: cart ?? this.cart,
+  //   );
+  // }
 }

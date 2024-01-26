@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:oyo/features/detailScreen/screen/detailScreen.dart';
-import 'package:oyo/features/home/models/venueModel.dart';
+import 'package:oyo/models/venueModel.dart';
 import 'package:oyo/features/search/service/searchService.dart';
 
 

@@ -17,7 +17,7 @@ class Hall {
     List<String> photos;
     String about;
     int pricePerPlate;
-    int v;
+    // int v;
 
     Hall({
         required this.id,
@@ -28,7 +28,7 @@ class Hall {
         required this.photos,
         required this.about,
         required this.pricePerPlate,
-        required this.v,
+        // required this.v,
     });
 
     factory Hall.fromJson(Map<String, dynamic> json) => Hall(
@@ -40,7 +40,7 @@ class Hall {
         photos: List<String>.from(json["photos"].map((x) => x)),
         about: json["about"],
         pricePerPlate: json["pricePerPlate"],
-        v: json["__v"],
+        // v: json["__v"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -52,7 +52,8 @@ class Hall {
         "photos": List<dynamic>.from(photos.map((x) => x)),
         "about": about,
         "pricePerPlate": pricePerPlate,
-        "__v": v,
+        // "__v": 
+        // v,
     };
 }
 

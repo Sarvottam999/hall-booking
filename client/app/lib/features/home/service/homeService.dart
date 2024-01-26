@@ -3,7 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:oyo/constant/constant.dart';
 import 'package:oyo/constant/error_handling.dart';
 import 'package:oyo/constant/utils.dart';
-import 'package:oyo/features/home/models/venueModel.dart';
+import 'package:oyo/models/userModel.dart';
+import 'package:oyo/models/venueModel.dart';
+import 'package:oyo/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 class HomeService  {
 
 
@@ -38,4 +41,8 @@ class HomeService  {
     }
     return productList;
   }
+
+
+    
+   
 }

@@ -104,6 +104,7 @@ console.log(req.body);
 hallRouter.post('/api/like-hall', async (req, res) => {
   try {
     const { hallId, userId } = req.body;
+    console.log(hallId, userId);
 
     // Update the hall's likes
     const h = await Hall.findByIdAndUpdate(hallId, { $addToSet: { likes: userId } }) ;

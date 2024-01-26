@@ -7,6 +7,7 @@ import 'package:oyo/constant/constant.dart';
 import 'package:oyo/constant/error_handling.dart';
 import 'package:oyo/constant/utils.dart';
 import 'package:oyo/features/detailScreen/provider/user.dart';
+import 'package:oyo/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 
@@ -44,9 +45,9 @@ class DetailService {
 
           var data = json.decode(res.body) as Map<String, dynamic>;
           if (data["available"] == true) {
-            Provider.of<UserJourDate>(context, listen: false).setIsDateSelectedAval(true);
+            Provider.of<UserProvider>(context, listen: false).setIsDateSelectedAval(true);
           } else {
-            Provider.of<UserJourDate>(context, listen: false).setIsDateSelectedAval(false);
+            Provider.of<UserProvider>(context, listen: false).setIsDateSelectedAval(false);
           }
           
       

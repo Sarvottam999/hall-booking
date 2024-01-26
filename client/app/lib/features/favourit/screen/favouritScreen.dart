@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oyo/constant/constant.dart';
 import 'package:oyo/features/favourit/service/favService.dart';
-import 'package:oyo/features/home/models/venueModel.dart';
+import 'package:oyo/models/venueModel.dart';
 import 'package:oyo/features/home/screen/home_screen.dart';
 // import 'api_service.dart'; // Replace with the actual file name of your ApiService
 

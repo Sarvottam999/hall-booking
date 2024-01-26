@@ -148,11 +148,11 @@ authRouter.post('/api/user/add-fav', async (req, res) => {
     const { hallId, userId } = req.body;
 
     // Update the user's favorite halls
-   const l =  await User.findByIdAndUpdate(userId, { $addToSet: { favoriteHalls: hallId } });
-    if (!l) {
+   const user =  await User.findByIdAndUpdate(userId, { $addToSet: { favoriteHalls: hallId } });
+    if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    res.json({value :true});
+    res.json( user);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -164,9 +164,12 @@ authRouter.post('/api/user/rem-fav', async (req, res) => {
     const { hallId, userId } = req.body;
 
     // Remove the hall from the user's favorites
-    await User.findByIdAndUpdate(userId, { $pull: { favoriteHalls: hallId } });
+  const user =   await User.findByIdAndUpdate(userId, { $pull: { favoriteHalls: hallId } });
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
 
-    res.json({value:true});
+    res.json(user);
    } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

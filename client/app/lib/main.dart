@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oyo/features/auth/service/auth_service.dart';
+import 'package:oyo/features/booking/provider/bookingProvider.dart';
 import 'package:oyo/features/detailScreen/screen/detailScreen.dart';
 import 'package:oyo/features/home/screen/home_screen.dart';
 import 'package:oyo/features/detailScreen/provider/user.dart';
@@ -27,7 +28,9 @@ class MyApp extends StatelessWidget {
       providers: [
         
         ChangeNotifierProvider<UserJourDate>(create: (_) => UserJourDate()),
-                ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider())
+                ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
+
+                ChangeNotifierProvider<BookingProvider>(create: (_) => BookingProvider())
 
         ],
   

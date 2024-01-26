@@ -109,27 +109,103 @@ class AuthService {
       // var response = jsonDecode(tokenRes.body);
 
       // if (response == true) {
-        print("****************>   get request");
-        http.Response userRes = await http.post(
-          Uri.parse('$url/api/getuser'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            // 'x-auth-token': token
-          },
-          body: json.encode( {
-            '_id': "65b2faeeb373952ef9467710",
-          }),
-        );
+      print("****************>   get request");
+      final res = await http.post(
+        Uri.parse('$url/api/getuser'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          // 'x-auth-token': token
+        },
+        body: json.encode({
+          '_id': "65b2faeeb373952ef9467710",
+        }),
+      );
 
-        print("****************>   get response");
-        print(userRes.body);
+      print("****************>   get response");
+      print(res.body);
+     if (res.statusCode == 200) {
+    Map<String, dynamic>  userRes = json.decode( res.body);
 
-        print("****************>   setting user");
-        var userProvider = Provider.of<UserProvider>(context, listen: false);
-        userProvider.setUser(userRes.body);
+      // print("****************>   setting user");
+      var userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.setUser(userRes);
       // }
+     }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+  }
+
+  Future<bool> addToFavorites({
+    required userId,
+    required hallId,
+    required BuildContext context,
+  }) async {
+    try {
+      print("------------------- inside add to fav -------------------");
+      final res = await http.post(Uri.parse('$url/api/user/add-fav'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            // 'x-auth-token': userProvider.user.token,
+          },
+          body: json.encode({
+            "hallId": "$hallId",
+            "userId": "$userId",
+          }));
+
+      if (res.statusCode == 200) {
+        final userRes = json.decode(res.body);
+        // final favoriteHalls = List<Map<String, dynamic>>.from(data['favoriteHalls']);
+        // return favoriteHalls;
+        print("********* resoponse  **********");
+        print(res.body);
+        var userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUser(userRes);
+      } else {
+        showSnackBar(context, "not able to add in your favourite");
+
+        return false;
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> removeFromFavorites({
+    required userId,
+    required hallId,
+    required BuildContext context,
+  }) async {
+    try {
+      print("------------------- inside remove from fav -------------------");
+      final res = await http.post(Uri.parse('$url/api/user/rem-fav'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            // 'x-auth-token': userProvider.user.token,
+          },
+          body: json.encode({
+            "hallId": "$hallId",
+            "userId": "$userId",
+          }));
+      if (res.statusCode == 200) {
+        final userRes = json.decode(res.body);
+        
+        print("********* resoponse  **********");
+        var userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUser(userRes);
+      } else {
+        showSnackBar(context, "not remove to add in your favourite");
+
+        return false;
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+      return false;
+    }
+
+    return true;
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:oyo/features/detailScreen/screen/checkScreen.dart';
 import 'package:oyo/features/detailScreen/screen/detailScreen.dart';
 import 'package:oyo/features/favourit/screen/favouritScreen.dart';
-import 'package:oyo/features/home/models/venueModel.dart';
+import 'package:oyo/models/venueModel.dart';
 import 'package:oyo/features/home/screen/home_screen.dart';
 import 'package:oyo/features/search/screen/searchScreen.dart';
 

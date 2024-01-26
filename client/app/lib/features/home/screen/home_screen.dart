@@ -6,11 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:oyo/constant/constant.dart';
 import 'package:oyo/constant/loader.dart';
 import 'package:oyo/constant/utils.dart';
+import 'package:oyo/models/userModel.dart';
+import 'package:oyo/features/auth/service/auth_service.dart';
 import 'package:oyo/features/detailScreen/screen/detailScreen.dart';
 import 'package:oyo/features/favourit/screen/favouritScreen.dart';
 import 'package:oyo/features/favourit/service/favService.dart';
 import 'package:oyo/features/home/service/homeService.dart';
-import 'package:oyo/features/home/models/venueModel.dart';
+import 'package:oyo/models/venueModel.dart';
 import 'package:oyo/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -25,25 +27,32 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final HomeService searchServices = HomeService();
   List<Hall>? halls;
+    bool _isMounted = false;
+
 
   @override
   void initState() {
     super.initState();
+        _isMounted = true;
+
     fetchSearchedProduct();
   }
 
   fetchSearchedProduct() async {
     var temp = await searchServices.fetchSearchedProduct(context: context);
     print(temp.length);
-    setState(() {
-      halls = temp;
-    });
+    if (_isMounted) {
+        setState(() {
+          halls = temp;
+        });
+      }
   }
 
-  void navigateToSearchScreen(String query) {
-    // Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
+  @override
+  void dispose() {
+    _isMounted = false;
+    super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -294,8 +303,8 @@ class FleatureItem extends StatefulWidget {
 }
 
 class _FleatureItemState extends State<FleatureItem> {
-  final FavService favService = FavService();
-  bool? isFavorite;
+  final AuthService favService = AuthService();
+  // bool? isFavorite;
 
   // void addToFavorites(String hallId, BuildContext context) async {
   //   await favService.addToFavorites(
@@ -308,74 +317,57 @@ class _FleatureItemState extends State<FleatureItem> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setFav(
-      userId: Provider.of<UserProvider>(context, listen: false).user.id, 
-      hall: widget.hall.id);
+   
   }
 
-  Future<void> setFav({required String userId, required hall}) async {
-    final userFavoriteHalls =
-        await favService.getUserFavoriteHalls(context: context, userId: userId);
-if (userFavoriteHalls.isEmpty ) {
-      isFavorite = false;
 
 
-  
-}
-else{
-  final targetHall = userFavoriteHalls.firstWhere((h) => h.id == hall);
-    isFavorite =  userFavoriteHalls.contains(widget.hall.id);
-    print("is fav ====================");
+  Future<void> toggleFavoriteStatus( String hallId, ) async {
+    final UserProvider userProvider =        Provider.of<UserProvider>(context, listen: false);
+    // final haProvider =        Provider.of<UserProvider>(context, listen: false).user.id;
 
-    setState(() {
-       if (targetHall != null) {
-      print('Found hall with ID : $targetHall');
-      isFavorite = true;
-    } else {
-      print('Hall with ID   not found');
-      isFavorite = false;
 
-    }
-    //
-     });
-
-}
-    
-  }
-
-  Future<void> toggleFavoriteStatus() async {
-    bool success = false;
-
+ 
     try {
-      if (isFavorite!) {
+      if (userProvider.getFav(hallid: hallId) == true) {
+    print("inside removing to fav");
+
         final remStas = await favService.removeFromFavorites(
             context: context,
             hallId: widget.hall.id,
-            userId: Provider.of<UserProvider>(context, listen: false).user.id);
-        if (remStas) {
-          setState(() {
-            isFavorite = false; // Rollback the UI update
-          });
-        }
+            userId: userProvider.user.id);
+        // if (remStas) {
+          if (remStas) {
+          //   // userProvider .setUser(user)
+            AuthService().getUserData(context);
+            
+          }
+          
+
+        
       } else {
+    print("inside adding to fav");
+    print(widget.hall.id);
+    
+
         final addstas = await favService.addToFavorites(
             context: context,
             hallId: widget.hall.id,
-            userId: Provider.of<UserProvider>(context, listen: false).user.id);
-        if (addstas) {
-          setState(() {
-            isFavorite = true; // Rollback the UI update
-          });
-        }
+            userId: userProvider.user.id);
+            if (addstas) {
+          //   // userProvider .setUser(user)
+            AuthService().getUserData(context);
+            
+          }
+       
+        // }
       }
     } catch (error) {
-      // Handle errors and rollback the UI update if necessary
       print('Error toggling favorite status: $error');
-      setState(() {
-        isFavorite = false; // Rollback the UI update
-      });
+     
     }
-  }
+    }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -402,21 +394,25 @@ else{
             child: GestureDetector(
               onTap: () {
                 print("---------------- > insode gesture detector");
-                toggleFavoriteStatus();
+                toggleFavoriteStatus(widget.hall.id);
               },
-              child: Container(
-                  height: 35,
-                  width: 35,
-                  // padding: EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      shape: BoxShape.circle),
-                  child: Icon(
-                    isFavorite == null || isFavorite == false
-                        ? Icons.favorite_border
-                        : Icons.favorite,
-                    size: 20,
-                  )),
+              child:  Consumer<UserProvider>(
+                    builder: (context, myData, _ ) {
+                  return Container(
+                      height: 35,
+                      width: 35,
+                      // padding: EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          shape: BoxShape.circle),
+                      child: Icon(
+                        myData.getFav(hallid: widget.hall.id)   == false
+                            ? Icons.favorite_border
+                            : Icons.favorite,
+                        size: 20,
+                      ));
+                }
+              ),
             ),
           ),
           const SizedBox(

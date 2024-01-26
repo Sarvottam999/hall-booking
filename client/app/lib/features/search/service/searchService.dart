@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
-import 'package:oyo/features/home/models/venueModel.dart';
+import 'package:oyo/models/venueModel.dart';
 // import 'package:oyo/features/search/model/searchModel.dart';
 import 'package:oyo/constant/constant.dart';
 import 'package:oyo/constant/error_handling.dart';
